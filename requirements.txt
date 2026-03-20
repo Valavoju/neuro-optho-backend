@@ -1,0 +1,13 @@
+flask
+flask-cors
+torch
+torchvision
+timm
+segmentation-models-pytorch
+tensorflow
+opencv-python-headless
+numpy
+pillow
+scikit-image
+scipy
+gunicorn
