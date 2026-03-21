@@ -1,5 +1,5 @@
 # ==========================
-# Neuro-Optho AI Backend API
+# Neuro-Optho AI Backend API (Render Optimized)
 # ==========================
 
 import os
@@ -15,58 +15,78 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import scipy.ndimage as ndi
 from skimage.morphology import skeletonize
-from skimage.measure import label, regionprops
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # ==========================
-# DEVICE
+# MEMORY SAFE TF CONFIG
 # ==========================
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("Running on:", DEVICE)
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
+gpus = tf.config.experimental.list_physical_devices("GPU")
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
+DEVICE = torch.device("cpu")   # FORCE CPU on render free plan
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ==========================
-# LOAD MODELS
+# GLOBAL MODELS (LAZY LOAD)
 # ==========================
 
-print("Loading models...")
+glaucoma_model = None
+dr_model = None
+alz_model = None
+vessel_model = None
 
-glaucoma_model = timm.create_model(
-    "efficientnet_b0",
-    pretrained=False,
-    num_classes=1
-).to(DEVICE)
 
-glaucoma_model.load_state_dict(
-    torch.load(os.path.join(BASE_DIR,"models/03_eye_glaucoma_classifier_efficientnet.pth"),
-               map_location=DEVICE)
-)
-glaucoma_model.eval()
+def load_models():
 
-dr_model = tf.keras.models.load_model(
-    os.path.join(BASE_DIR,"models/dr_final_messidor.keras")
-)
+    global glaucoma_model, dr_model, alz_model, vessel_model
 
-alz_model = tf.keras.models.load_model(
-    os.path.join(BASE_DIR,"models/alz_densenet_best.keras")
-)
+    if glaucoma_model is None:
+        print("Loading glaucoma model...")
+        glaucoma_model = timm.create_model(
+            "efficientnet_b0",
+            pretrained=False,
+            num_classes=1
+        ).to(DEVICE)
 
-vessel_model = smp.Unet(
-    encoder_name="resnet34",
-    encoder_weights=None,
-    in_channels=3,
-    classes=1
-).to(DEVICE)
+        glaucoma_model.load_state_dict(
+            torch.load(os.path.join(BASE_DIR,"models/03_eye_glaucoma_classifier_efficientnet.pth"),
+                       map_location=DEVICE)
+        )
+        glaucoma_model.eval()
 
-vessel_model.load_state_dict(
-    torch.load(os.path.join(BASE_DIR,"models/03_eye_vessel_unet.pth"),
-               map_location=DEVICE)
-)
-vessel_model.eval()
+    if vessel_model is None:
+        print("Loading vessel model...")
+        vessel_model = smp.Unet(
+            encoder_name="resnet34",
+            encoder_weights=None,
+            in_channels=3,
+            classes=1
+        ).to(DEVICE)
 
-print("All models loaded successfully.")
+        vessel_model.load_state_dict(
+            torch.load(os.path.join(BASE_DIR,"models/03_eye_vessel_unet.pth"),
+                       map_location=DEVICE)
+        )
+        vessel_model.eval()
+
+    if dr_model is None:
+        print("Loading DR model...")
+        dr_model = tf.keras.models.load_model(
+            os.path.join(BASE_DIR,"models/dr_final_messidor.keras"),
+            compile=False
+        )
+
+    if alz_model is None:
+        print("Loading Alzheimer model...")
+        alz_model = tf.keras.models.load_model(
+            os.path.join(BASE_DIR,"models/alz_densenet_best.keras"),
+            compile=False
+        )
 
 # ==========================
 # TRANSFORMS
@@ -138,14 +158,6 @@ def preprocess_mri_backend(pil_img):
     if len(img.shape)==3:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    img = cv2.normalize(img,None,0,255,cv2.NORM_MINMAX)
-    _,th = cv2.threshold(img,10,255,cv2.THRESH_BINARY)
-    coords = cv2.findNonZero(th)
-
-    if coords is not None:
-        x,y,w,h = cv2.boundingRect(coords)
-        img = img[y:y+h,x:x+w]
-
     img = cv2.resize(img,(224,224))
     img = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
     img = img/255.0
@@ -161,31 +173,30 @@ CORS(app)
 
 @app.route("/")
 def home():
-    return "Neuro-Optho AI Backend Running"
+    return "Neuro-Optho Backend Running 🚀"
 
 @app.route("/predict", methods=["POST"])
 def predict():
 
+    load_models()   # ⭐ LOAD ONLY WHEN REQUEST COMES
+
     fundus = Image.open(request.files["fundus"]).convert("RGB")
     brain = Image.open(request.files["brain"]).convert("RGB")
 
-    # Glaucoma
     tensor = glaucoma_transform(fundus).unsqueeze(0).to(DEVICE)
+
     with torch.no_grad():
         glaucoma_prob = torch.sigmoid(glaucoma_model(tensor)).item()
 
-    # DR
     img = np.array(fundus.resize((300,300)))
     img = preprocess_input(img)
     img = np.expand_dims(img,0)
     dr_prob = float(dr_model.predict(img)[0][0])
 
-    # Biomarkers
     vessel_tensor = vessel_transform(fundus)
     density,branch_density,tortuosity = extract_biomarkers(vessel_tensor)
     eye_score = compute_eye_risk(density)
 
-    # Alzheimer
     brain_tensor = preprocess_mri_backend(brain)
     alz_pred = alz_model.predict(brain_tensor)[0]
     idx = int(np.argmax(alz_pred))
@@ -219,5 +230,5 @@ def predict():
     })
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT",5000))
+    port = int(os.environ.get("PORT",10000))
     app.run(host="0.0.0.0", port=port)
