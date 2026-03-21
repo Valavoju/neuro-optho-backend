@@ -1,5 +1,5 @@
 # ==========================
-# Neuro-Optho AI Backend API (Render Optimized)
+# Neuro-Optho AI Backend (FINAL RENDER VERSION)
 # ==========================
 
 import os
@@ -16,34 +16,64 @@ from flask_cors import CORS
 import scipy.ndimage as ndi
 from skimage.morphology import skeletonize
 from tensorflow.keras.applications.efficientnet import preprocess_input
+from huggingface_hub import hf_hub_download
 
 # ==========================
-# MEMORY SAFE TF CONFIG
+# MEMORY SAFE TF
 # ==========================
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-
-gpus = tf.config.experimental.list_physical_devices("GPU")
-for gpu in gpus:
-    tf.config.experimental.set_memory_growth(gpu, True)
-
-DEVICE = torch.device("cpu")   # FORCE CPU on render free plan
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEVICE = torch.device("cpu")
 
 # ==========================
-# GLOBAL MODELS (LAZY LOAD)
+# HUGGINGFACE MODEL DOWNLOAD
+# ==========================
+
+HF_REPO = "Avi-Valavoju/neuro-optho-models"
+
+def download_models():
+
+    paths = {}
+
+    paths["glaucoma"] = hf_hub_download(
+        repo_id=HF_REPO,
+        filename="03_eye_glaucoma_classifier_efficientnet.pth"
+    )
+
+    paths["vessel"] = hf_hub_download(
+        repo_id=HF_REPO,
+        filename="03_eye_vessel_unet.pth"
+    )
+
+    paths["dr"] = hf_hub_download(
+        repo_id=HF_REPO,
+        filename="dr_final_messidor.keras"
+    )
+
+    paths["alz"] = hf_hub_download(
+        repo_id=HF_REPO,
+        filename="alz_densenet_best.keras"
+    )
+
+    return paths
+
+# ==========================
+# GLOBAL MODELS
 # ==========================
 
 glaucoma_model = None
 dr_model = None
 alz_model = None
 vessel_model = None
+MODEL_PATHS = None
 
 
 def load_models():
+    global glaucoma_model, dr_model, alz_model, vessel_model, MODEL_PATHS
 
-    global glaucoma_model, dr_model, alz_model, vessel_model
+    if MODEL_PATHS is None:
+        print("Downloading models from HuggingFace...")
+        MODEL_PATHS = download_models()
 
     if glaucoma_model is None:
         print("Loading glaucoma model...")
@@ -54,8 +84,7 @@ def load_models():
         ).to(DEVICE)
 
         glaucoma_model.load_state_dict(
-            torch.load(os.path.join(BASE_DIR,"models/03_eye_glaucoma_classifier_efficientnet.pth"),
-                       map_location=DEVICE)
+            torch.load(MODEL_PATHS["glaucoma"], map_location=DEVICE)
         )
         glaucoma_model.eval()
 
@@ -69,22 +98,21 @@ def load_models():
         ).to(DEVICE)
 
         vessel_model.load_state_dict(
-            torch.load(os.path.join(BASE_DIR,"models/03_eye_vessel_unet.pth"),
-                       map_location=DEVICE)
+            torch.load(MODEL_PATHS["vessel"], map_location=DEVICE)
         )
         vessel_model.eval()
 
     if dr_model is None:
         print("Loading DR model...")
         dr_model = tf.keras.models.load_model(
-            os.path.join(BASE_DIR,"models/dr_final_messidor.keras"),
+            MODEL_PATHS["dr"],
             compile=False
         )
 
     if alz_model is None:
         print("Loading Alzheimer model...")
         alz_model = tf.keras.models.load_model(
-            os.path.join(BASE_DIR,"models/alz_densenet_best.keras"),
+            MODEL_PATHS["alz"],
             compile=False
         )
 
@@ -178,7 +206,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    load_models()   # ⭐ LOAD ONLY WHEN REQUEST COMES
+    load_models()
 
     fundus = Image.open(request.files["fundus"]).convert("RGB")
     brain = Image.open(request.files["brain"]).convert("RGB")
@@ -229,7 +257,6 @@ def predict():
         "risk_level":level
     })
 
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
