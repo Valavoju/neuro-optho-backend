@@ -181,7 +181,7 @@ No manual download is required.
 # 🔍 Explainable AI (Grad-CAM)
 
 <p align="center">
-  <img src="screentshots/gradcam.png" width="750">
+  <img src="screenshots/gradcam.png" width="750">
 </p>
 
 <p align="center">
