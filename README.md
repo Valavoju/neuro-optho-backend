@@ -4,11 +4,36 @@
 
 ---
 
+## 🏷️ Badges
+
+<p align="center">
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-Deep%20Learning-orange?style=for-the-badge&logo=tensorflow)
+![React](https://img.shields.io/badge/React-Frontend-blue?style=for-the-badge&logo=react)
+![Flask](https://img.shields.io/badge/Flask-Backend-black?style=for-the-badge&logo=flask)
+![EfficientNet](https://img.shields.io/badge/EfficientNet-Classification-green?style=for-the-badge)
+![U--Net](https://img.shields.io/badge/U--Net-Segmentation-red?style=for-the-badge)
+![DenseNet](https://img.shields.io/badge/DenseNet-MRI%20Analysis-purple?style=for-the-badge)
+![GradCAM](https://img.shields.io/badge/GradCAM-Explainable%20AI-yellow?style=for-the-badge)
+
+</p>
+
+---
+
 ## 📌 Overview
 
 Neuro-Optho AI is a multimodal deep learning framework developed for early cognitive risk assessment and neurodegenerative disease screening by integrating retinal fundus image analysis and brain MRI classification.
 
-The system combines retinal disease detection, retinal vessel biomarker extraction, Alzheimer's disease classification, multimodal risk fusion, and explainable AI to generate an overall cognitive risk score for clinical decision support.
+The system combines:
+
+- 👁️ Retinal Disease Detection
+- 🌐 Retinal Vessel Biomarker Extraction
+- 🧠 Alzheimer's Disease Classification
+- 📊 Multimodal Risk Fusion
+- 🔍 Explainable AI Visualization
+
+to generate an overall cognitive risk score for clinical decision support.
 
 ---
 
@@ -189,34 +214,33 @@ Q --> R[PDF Report]
 
 ### Frontend
 
-- React.js
-- Tailwind CSS
-- Axios
-- Vite
+![React](https://img.shields.io/badge/React.js-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
 ### Backend
 
-- Flask
-- Flask-CORS
-- Python
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Flask-CORS](https://img.shields.io/badge/Flask--CORS-4B8BBE?style=for-the-badge)
+![REST API](https://img.shields.io/badge/REST_API-FF6B6B?style=for-the-badge)
 
-### Deep Learning
+### Deep Learning & AI
 
-- TensorFlow
-- Keras
-- OpenCV
-- NumPy
-- Pandas
-- Scikit-Learn
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![Keras](https://img.shields.io/badge/Keras-D00000?style=for-the-badge&logo=keras&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
 
-### Models Used
+### AI Models
 
-| Model | Purpose |
-|---------|---------|
-| EfficientNet | Glaucoma & Diabetic Retinopathy Detection |
-| U-Net | Retinal Vessel Segmentation |
-| DenseNet | Alzheimer's MRI Classification |
-| Grad-CAM | Explainable AI Visualization |
+![EfficientNet](https://img.shields.io/badge/EfficientNet-Retinal_Disease_Detection-success?style=for-the-badge)
+![U-Net](https://img.shields.io/badge/U--Net-Vessel_Segmentation-red?style=for-the-badge)
+![DenseNet](https://img.shields.io/badge/DenseNet-Alzheimer_Classification-purple?style=for-the-badge)
+![Grad-CAM](https://img.shields.io/badge/GradCAM-Explainable_AI-yellow?style=for-the-badge)
 
 ---
 
@@ -271,9 +295,7 @@ http://127.0.0.1:5000
 
 ```bash
 cd frontend
-
 npm install
-
 npm run dev
 ```
 
@@ -315,24 +337,12 @@ Neuro-Optho-AI/
 │   ├── architecture.png
 │   ├── workflow.png
 │   ├── dashboard.png
-│   └── banner.png
+│   ├── gradcam.png
+│   └── vessel_segmentation.png
 │
 ├── requirements.txt
 └── README.md
 ```
-
----
-
-## 📸 Project Screenshots
-
-### Dashboard
-![Dashboard](assets/dashboard.png)
-
-### Grad-CAM Visualization
-![GradCAM](assets/gradcam.png)
-
-### Vessel Segmentation
-![Segmentation](assets/vessel_segmentation.png)
 
 ---
 
