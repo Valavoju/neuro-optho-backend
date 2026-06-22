@@ -54,54 +54,27 @@ The system combines retinal disease detection, retinal vessel segmentation, reti
 
 ---
 
+# 🏗️ System Architecture
+
+<p align="center">
+  <img src="./architecture.png" width="900">
+</p>
+
+<p align="center">
+<b>Figure 1:</b> Multimodal Neuro-Optho AI Architecture
+</p>
+
+---
+
 # ⚙️ System Workflow
 
-```text
-Fundus Image
-     │
-     ▼
-Image Preprocessing
-     │
-     ▼
-Retinal Disease Detection
-(EfficientNet)
-     │
-     ▼
-Vessel Segmentation
-(U-Net)
-     │
-     ▼
-Biomarker Extraction
-     │
-     ▼
-Eye Cognitive Risk Score
+<p align="center">
+  <img src="./WorkFlow.png" width="900">
+</p>
 
-MRI Image
-     │
-     ▼
-Image Preprocessing
-     │
-     ▼
-Alzheimer Classification
-(DenseNet)
-     │
-     ▼
-Brain Risk Score
-
-Eye Risk Score + Brain Risk Score
-                │
-                ▼
-     Multimodal Risk Fusion
-                │
-                ▼
-     Final Cognitive Risk Score
-                │
-                ▼
-       Grad-CAM Explainability
-                │
-                ▼
-      Clinical Report Output
-```
+<p align="center">
+<b>Figure 2:</b> Workflow of the Neuro-Optho AI System
+</p>
 
 ---
 
@@ -122,6 +95,47 @@ Eye Risk Score + Brain Risk Score
 
 ---
 
+# 👁️ Retinal Biomarker Analysis
+
+<p align="center">
+  <img src="./eye.png" width="750">
+</p>
+
+<p align="center">
+<b>Figure 3:</b> Retinal Vessel Biomarker Extraction
+</p>
+
+The U-Net segmentation model extracts retinal vascular structures and computes:
+
+- Vessel Density
+- Branch Density
+- Tortuosity Index
+
+These biomarkers are used to generate the Eye Cognitive Risk Score.
+
+---
+
+# 🧠 MRI-Based Alzheimer's Classification
+
+<p align="center">
+  <img src="./brain.png" width="750">
+</p>
+
+<p align="center">
+<b>Figure 4:</b> Alzheimer's Stage Classification using DenseNet
+</p>
+
+The DenseNet model classifies MRI scans into:
+
+- Non Demented
+- Very Mild Demented
+- Mild Demented
+- Moderate Demented
+
+and generates the Brain Risk Score.
+
+---
+
 # 🛠️ Technology Stack
 
 ## Backend
@@ -130,7 +144,7 @@ Eye Risk Score + Brain Risk Score
 ![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
 ![Flask-CORS](https://img.shields.io/badge/Flask--CORS-4B8BBE?style=for-the-badge)
 
-### Deep Learning & AI
+## Deep Learning & AI
 
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
@@ -139,7 +153,7 @@ Eye Risk Score + Brain Risk Score
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
 ![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
 
-### AI Models
+## AI Models
 
 ![EfficientNet](https://img.shields.io/badge/EfficientNet-Retinal_Disease_Detection-success?style=for-the-badge)
 ![U-Net](https://img.shields.io/badge/U--Net-Vessel_Segmentation-red?style=for-the-badge)
@@ -152,7 +166,7 @@ Eye Risk Score + Brain Risk Score
 
 Due to GitHub file size limitations, trained model weights are hosted on Hugging Face.
 
-**Repository:**
+Repository:
 
 https://huggingface.co/Avi-Valavoju/neuro-optho-models
 
@@ -164,6 +178,17 @@ The backend automatically downloads:
 - alz_densenet_best.keras
 
 No manual download is required.
+# 🔍 Explainable AI (Grad-CAM)
+
+<p align="center">
+  <img src="./gradcam.png" width="750">
+</p>
+
+<p align="center">
+<b>Figure 5:</b> Grad-CAM Visualization
+</p>
+
+Grad-CAM highlights the image regions contributing most strongly to model predictions, improving transparency and clinical interpretability.
 
 ---
 
@@ -175,7 +200,7 @@ No manual download is required.
 GET /
 ```
 
-Response:
+Response
 
 ```json
 {
@@ -216,7 +241,7 @@ POST /predict
 
 # ▶️ Installation
 
-### Clone Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/your-username/Neuro-Optho-AI.git
@@ -224,13 +249,13 @@ git clone https://github.com/your-username/Neuro-Optho-AI.git
 cd Neuro-Optho-AI
 ```
 
-### Install Dependencies
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Run Application
+## Run Application
 
 ```bash
 python app.py
@@ -249,15 +274,14 @@ http://127.0.0.1:10000
 ```text
 Neuro-Optho-AI/
 │
+├── WorkFlow.png
+├── architecture.png
+├── brain.png
+├── eye.png
+├── gradcam.png
+│
 ├── models/
 │   └── README.md
-│
-├── screenshots/
-│   ├── architecture.png
-│   ├── workflow.png
-│   ├── dashboard.png
-│   ├── gradcam.png
-│   └── vessel_segmentation.png
 │
 ├── app.py
 ├── requirements.txt
@@ -295,12 +319,11 @@ Model weights are downloaded automatically from Hugging Face during startup.
 
 # 👨‍💻 Authors
 
-### Faculty Mentors
+## Faculty Mentor
 
 - Mrs. G. Aishwarya
 
-
-### Student Team
+## Student Team
 
 - Avinash Valavoju
 - N. Joy Darren
