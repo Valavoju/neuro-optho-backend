@@ -98,7 +98,7 @@ The system combines retinal disease detection, retinal vessel segmentation, reti
 # 👁️ Retinal Biomarker Analysis
 
 <p align="center">
-  <img src="./eye.png" width="750">
+  <img src="screenshots/eye.png" width="750">
 </p>
 
 <p align="center">
@@ -118,7 +118,7 @@ These biomarkers are used to generate the Eye Cognitive Risk Score.
 # 🧠 MRI-Based Alzheimer's Classification
 
 <p align="center">
-  <img src="./brain.png" width="750">
+  <img src="screenshots/brain.png" width="750">
 </p>
 
 <p align="center">
@@ -181,7 +181,7 @@ No manual download is required.
 # 🔍 Explainable AI (Grad-CAM)
 
 <p align="center">
-  <img src="./gradcam.png" width="750">
+  <img src="screentshots/gradcam.png" width="750">
 </p>
 
 <p align="center">
