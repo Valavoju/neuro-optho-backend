@@ -57,7 +57,7 @@ The system combines retinal disease detection, retinal vessel segmentation, reti
 # 🏗️ System Architecture
 
 <p align="center">
-  <img src="./architecture.png" width="900">
+  <img src="screenshots/architecture.png" width="900">
 </p>
 
 <p align="center">
@@ -69,7 +69,7 @@ The system combines retinal disease detection, retinal vessel segmentation, reti
 # ⚙️ System Workflow
 
 <p align="center">
-  <img src="./WorkFlow.png" width="900">
+  <img src="screenshots/WorkFlow.png" width="900">
 </p>
 
 <p align="center">
